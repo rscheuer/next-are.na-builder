@@ -1,5 +1,3 @@
-import Alert from '../components/alert'
-import Footer from '../components/footer'
 import Meta from '../components/meta'
 import MoreBlocks from '../components/more-blocks'
 import Description from './description'
@@ -22,13 +20,10 @@ export default function Layout({ preview, children, allPosts, blocks, metadata, 
         {/* <Alert preview={preview} /> */}
         <main>
             <div className="flex overflow-x-scroll min-w-full hide-scroll-bar snap snap-x snap-mandatory">
-              {/* <div className="flex flex-nowrap min-w-full"> */}
                 {children}
-              {/* </div> */}
             </div>
         </main>
       </div>
-      {/* <Footer /> */}
     </>
   )
 }
