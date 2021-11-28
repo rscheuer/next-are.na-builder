@@ -44,7 +44,8 @@ export default function Index({ allPosts, blocks, metadata, desc, lastEdit }) {
     <>
       <Layout>
         <Head>
-          <title>PORFOLIO {CMS_NAME}</title>
+          <title>{process.env.SITE_NAME}</title>
+          <link rel="shortcut icon" href="/favicons/favicon.ico" />
         </Head>
         {blocks.length > 0 && <MoreBlocks posts={morePosts} year={year} month={month} desc={desc} />}
       </Layout>
