@@ -19,18 +19,9 @@ export default function Index({ allPosts, blocks, metadata, desc, lastEdit }) {
   const year = editDate.getFullYear()
   const month = editDate.getMonth();
 
-  const config = {
-    demo: "demo"
-  }
-  const data = `ipsum`;
 
   // console.log(blocks)
 
-
-
-  const onCloseItem = (e, obj) => {
-
-  }
 
   return (
     <>
