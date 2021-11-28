@@ -1,51 +1,74 @@
 import Container from '../components/container'
 import MoreStories from '../components/more-stories'
+import MoreBlocks from '../components/more-blocks'
 import HeroPost from '../components/hero-post'
 import Intro from '../components/intro'
 import Layout from '../components/layout'
-import { getAllPosts } from '../lib/api'
+import { getAllPosts, getChannelContents, getChannelInfo } from '../lib/api'
 import Head from 'next/head'
 import { CMS_NAME } from '../lib/constants'
+import markdownToHtml from '../lib/markdownToHtml'
+import Description from '../components/description'
+import ReactFinder from "react-finderjs";
+import SecondaryBlockSwitcher from "../components/secondary-block-switcher"
 
-export default function Index({ allPosts }) {
-  const heroPost = allPosts[0]
-  const morePosts = allPosts.slice(1)
+import { useContext, useState } from 'react';
+import ClickContext from '../contexts/click';
+import { configureStore } from '@reduxjs/toolkit'
+import { test } from 'gray-matter'
+
+export default function Index({ allPosts, blocks, metadata, desc, lastEdit }) {
+  // const heroPost = blocks[0]
+  const morePosts = blocks
+  const cool = metadata
+  const [clickAmount, increment] = useContext(ClickContext);
+
+  const editDate = new Date(lastEdit)
+  const year = editDate.getFullYear()
+  const month = editDate.getMonth();
+
+  const config = {
+    demo: "demo"
+  }
+  const data = `ipsum`;
+
+  console.log(blocks)
+
+
+
+  const onCloseItem = (e, obj) => {
+
+  }
+
   return (
     <>
       <Layout>
         <Head>
-          <title>Next.js Blog Example with {CMS_NAME}</title>
+          <title>PORFOLIO {CMS_NAME}</title>
         </Head>
-        <Container>
-          <Intro />
-          {heroPost && (
-            <HeroPost
-              title={heroPost.title}
-              coverImage={heroPost.coverImage}
-              date={heroPost.date}
-              author={heroPost.author}
-              slug={heroPost.slug}
-              excerpt={heroPost.excerpt}
-            />
-          )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
-        </Container>
+        {blocks.length > 0 && <MoreBlocks posts={morePosts} year={year} month={month} desc={desc} />}
       </Layout>
     </>
   )
 }
 
 export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    'title',
-    'date',
-    'slug',
-    'author',
-    'coverImage',
-    'excerpt',
-  ])
+  const blocks = getChannelContents(process.env.ARENA_CHANNEL.toString());
+  const metadata = await getChannelInfo(process.env.ARENA_CHANNEL.toString());
+
+  const content = await markdownToHtml(metadata[0].cDesc)
+
+  const lastEdit = await metadata[0].cUpdated;
+
 
   return {
-    props: { allPosts },
+    props: { 
+      // allPosts,
+      blocks: await blocks,
+      metadata: await metadata,
+      desc: await content,
+      lastEdit: await lastEdit,
+    },
+    revalidate: 6,
   }
 }
